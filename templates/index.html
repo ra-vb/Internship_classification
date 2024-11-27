@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satisfaction Prediction</title>
+</head>
+<body>
+    <h1>Satisfaction Prediction Form</h1>
+    <form id="predictionForm">
+        <label for="Items Purchased">Items Purchased:</label><br>
+        <input type="number" id="Items Purchased" name="Items Purchased" step="any" required><br><br>
+
+        <label for="Total Spent">Total Spent:</label><br>
+        <input type="number" step="0.01" id="Total Spent" name="Total Spent" step="any" required><br><br>
+
+        <label for="Warranty Extension">Warranty Extension:</label><br>
+        <select id="Warranty Extension" name="Warranty Extension" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br><br>
+
+        <label for="Payment Method">Payment Method:</label><br>
+        <select id="Payment Method" name="Payment Method" required>
+            <option value="UPI">UPI</option>
+            <option value="Cash">Cash</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Net Banking">Net Banking</option>
+        </select><br><br>
+
+        <label for="Revenue">Revenue:</label><br>
+        <input type="number" step="0.01" id="Revenue" name="Revenue" step="any" required><br><br>
+
+        <label for="Store Rating">Store Rating (1-5):</label><br>
+        <input type="number" id="Store Rating" name="Store Rating" min="1" max="5" required><br><br>
+
+        <label for="Loyalty Score">Loyalty Score:</label><br>
+        <input type="number" id="Loyalty Score" name="Loyalty Score" required><br><br>
+
+        <label for="Preferred Visit Time">Preferred Visit Time:</label><br>
+        <select id="Preferred Visit Time" name="Preferred Visit Time" required>
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+        </select><br><br>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <h2>Prediction Result: <span id="result"></span></h2>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById('result').innerText = result.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
